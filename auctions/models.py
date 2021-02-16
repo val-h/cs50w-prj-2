@@ -5,7 +5,14 @@ from django.db.models.fields import IntegerField
 
 
 class User(AbstractUser):
-    pass
+    date_created = models.DateTimeField(auto_now_add=True)
+    # To be able to set from 'My Account' page, it will replace Watchlist
+    # and be a combination of many features, settings(i guess), pfp, watchlist
+    # current listings(owner's), current bids, comments etc.
+    pfp = models.ImageField(blank = True)
+    status = models.TextField(blank=True)
+    # max and min rating to be added
+    rating = models.IntegerField(blank=True)
 
 class Category(models.Model):
     title = models.CharField(max_length=40)
@@ -22,7 +29,10 @@ class Listing(models.Model):
     description = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
-    category = models.ForeignKey(Category)
+    # Highly unlikely to delete Categories, unless i allow users to 
+    # create categories but just in case, if category is deleted, the 
+    # listing will survive.
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
 
     # Optional
     image = models.ImageField(blank=True)
