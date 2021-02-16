@@ -11,7 +11,7 @@ class Category(models.Model):
     title = models.CharField(max_length=40)
     description = models.TextField()
 
-    # For later
+    # See how to implement it with a function
     number_of_listings = IntegerField()
 
     def __str__(self) -> str:
@@ -25,7 +25,7 @@ class Listing(models.Model):
     category = models.ForeignKey(Category)
 
     # Optional
-    image = models.ImageField()
+    image = models.ImageField(blank=True)
 
     def __str__(self) -> str:
         return f"{self.title}, created by: {self.owner}"
