@@ -3,9 +3,12 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.fields import IntegerField
 
+# from django.utils.timezone import now as date_now
+
 
 class User(AbstractUser):
-    date_created = models.DateTimeField(auto_now_add=True)
+    # date_created = models.DateTimeField(auto_now_add=True, default=date_now())
+    
     # To be able to set from 'My Account' page, it will replace Watchlist
     # and be a combination of many features, settings(i guess), pfp, watchlist
     # current listings(owner's), current bids, comments etc.
