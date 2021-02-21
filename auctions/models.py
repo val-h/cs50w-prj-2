@@ -7,15 +7,19 @@ from django.db.models.fields import IntegerField
 
 
 class User(AbstractUser):
+    pass
     # date_created = models.DateTimeField(auto_now_add=True, default=date_now())
     
+    # implemented at the end
+
     # To be able to set from 'My Account' page, it will replace Watchlist
     # and be a combination of many features, settings(i guess), pfp, watchlist
     # current listings(owner's), current bids, comments etc.
-    pfp = models.ImageField(blank = True)
-    status = models.TextField(blank=True)
+
+    # pfp = models.ImageField(blank=True)
+    # status = models.TextField(blank=True)
     # max and min rating to be added
-    rating = models.IntegerField(blank=True)
+    # rating = models.IntegerField(blank=True)
 
 class Category(models.Model):
     title = models.CharField(max_length=40)
