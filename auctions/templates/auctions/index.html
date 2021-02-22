@@ -2,6 +2,11 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-
+    <ul>
+        {% for listing in listings %}
+            <!-- To point to a dedicated page for the listing -->
+            <a href="#"><li>{{ listing.title }}</li></a>
+        {% endfor %}
+    </ul>
     TODO
 {% endblock %}

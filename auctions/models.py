@@ -17,6 +17,8 @@ class User(AbstractUser):
     # current listings(owner's), current bids, comments etc.
 
     # pfp = models.ImageField(blank=True)
+    # to be placed default -> auctions/static/images/default.jpg
+
     # status = models.TextField(blank=True)
     # max and min rating to be added
     # rating = models.IntegerField(blank=True)
@@ -26,7 +28,7 @@ class Category(models.Model):
     description = models.TextField()
 
     # See how to implement it with a function
-    number_of_listings = IntegerField()
+    number_of_listings = IntegerField(default=0)
 
     def __str__(self) -> str:
         return f"{self.title}"
