@@ -2,4 +2,9 @@
 
 {% block body %}
 Placeholder
+<form action="{% url 'auctions:create_listing' %}" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Create listing">
+</form>
 {% endblock %}
