@@ -11,4 +11,5 @@ urlpatterns = [
 
     # my paths
     path("create_listing/", views.create_listing, name="create_listing"),
+    path("listing/<int:listing_id>", views.listing_view, name="listing"),
 ]

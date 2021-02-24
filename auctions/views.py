@@ -1,7 +1,9 @@
+from typing import List
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 from .models import Listing, User
 from .forms import ListingForm
@@ -62,11 +64,23 @@ def register(request):
         return render(request, "auctions/register.html")
 
 # My views
+@login_required
 def create_listing(request):
     if request.method == 'POST':
-        pass
+        form = ListingForm(request.POST)
+        if form.is_valid():
+            new_listing = form.save(commit=False)
+            new_listing.owner = request.user
+            new_listing.save()
+            return redirect('auctions:index')
     else:
         form = ListingForm()
         return render(request, 'auctions/create_listing.html', {
             'form': form,
         })
+
+def listing_view(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    return render(request, 'auctions/listing.html', {
+        'listing': listing,
+    })
