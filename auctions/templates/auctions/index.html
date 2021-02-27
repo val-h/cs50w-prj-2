@@ -5,11 +5,15 @@
     <ul>
         {% for listing in listings %}
             <!-- To point to a dedicated page for the listing -->
-            <a href="{% url 'auctions:listing' listing.id %}"><li>
-                    {{ listing.title }} - 
-                    <b>Price: {{ listing.price }}</b><br>
-                    {{ listing.description }}
-            </li></a>
+            <li style="margin-bottom: 15px;">
+                <a href="{% url 'auctions:listing' listing.id %}">
+                    {{ listing.title }}
+                </a><br>
+                <b>Price: {{ listing.price }}</b><br>
+                {{ listing.description }}
+            </li>
+        {% empty %}
+            <li>Empty : (</li>
         {% endfor %}
     </ul>
     TODO

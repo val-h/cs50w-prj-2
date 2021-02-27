@@ -1,6 +1,7 @@
 from typing import List
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
+from django.db.utils import OperationalError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -10,9 +11,19 @@ from .forms import ListingForm
 
 def index(request):
     listings = Listing.objects.all()
-    return render(request, "auctions/index.html", {
+    return render(request, 'auctions/index.html', {
         'listings': listings,
     })
+    # try:
+    #     listings = Listing.objects.all()
+    # except OperationalError:
+    #     return render(request, 'auctions/index.html', {
+    #         'message': 'No listings available!',
+    #     })
+    # finally: 
+    #     return render(request, "auctions/index.html", {
+    #         'listings': listings,
+    #     })
 
 def login_view(request):
     if request.method == "POST":
@@ -67,7 +78,8 @@ def register(request):
 @login_required
 def create_listing(request):
     if request.method == 'POST':
-        form = ListingForm(request.POST)
+        # Never forget the request.FILES...
+        form = ListingForm(request.POST, request.FILES)
         if form.is_valid():
             new_listing = form.save(commit=False)
             new_listing.owner = request.user

@@ -12,8 +12,9 @@ class ListingForm(forms.ModelForm):
         model = Listing
         fields = [
         'title',
-        'description',
         'category',
+        'price',
+        'description',
         'image',]
         labels = {}
 

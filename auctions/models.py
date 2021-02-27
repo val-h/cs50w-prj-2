@@ -1,4 +1,5 @@
 from typing import List
+# from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.fields import IntegerField
@@ -8,7 +9,7 @@ from django.db.models.fields import IntegerField
 
 class User(AbstractUser):
     pass
-    # date_created = models.DateTimeField(auto_now_add=True, default=date_now())
+    # date_created = models.DateTimeField(auto_now_add=True)
     
     # implemented at the end
 
@@ -16,10 +17,10 @@ class User(AbstractUser):
     # and be a combination of many features, settings(i guess), pfp, watchlist
     # current listings(owner's), current bids, comments etc.
 
-    # pfp = models.ImageField(blank=True)
+    # pfp = models.ImageField(upload_to='images/pfps', blank=True)
     # to be placed default -> auctions/static/images/default.jpg
 
-    # status = models.TextField(blank=True)
+    # status = models.CharField(max_length=20, blank=True)
     # max and min rating to be added
     # rating = models.IntegerField(blank=True)
 
@@ -45,7 +46,7 @@ class Listing(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=2)
 
     # Optional
-    image = models.ImageField(blank=True)
+    image = models.ImageField(upload_to="images/", blank=True)
 
     def __str__(self) -> str:
         return f"{self.title}, created by: {self.owner}"
@@ -54,7 +55,7 @@ class Bid(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item")
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bidder")
     date = models.DateTimeField(auto_now_add=True)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
 
     def __str__(self) -> str:
         return f"Bid on: {self.listing}, by : {self.bidder}"

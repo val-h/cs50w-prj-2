@@ -2,14 +2,22 @@
 
 {% block body %}
 <h1>{{ listing.title }}</h1>
-<h3>Created by: {{ listing.owner }}, on {{ listing.date }}</h3>
-<p>
-    <!-- Problem with the image file for listings -->
-    <img src="{{ listing.image.url }}" alt="Listing Image">
-    Listing caption
-</p>
-<p>
-    {{ listing.description }}
-</p>
+<h3>Created by: {{ listing.owner }}</h3>
+<h5>{{ listing.date }}</h5>
+
+<!-- main content -->
+<div>
+    <div>Price: {{ listing.price }}</div>
+    {% if listing.image %}
+    <div>
+        <!-- Problem with the image file for listings -->
+        <img src="{{ listing.image.url }}" alt="Listing Image">
+        Listing caption
+    </div>
+    {% endif %}
+    <p>
+        {{ listing.description }}
+    </p>
+</div>
 
 {% endblock %}
