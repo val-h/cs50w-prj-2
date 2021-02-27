@@ -42,6 +42,7 @@ class Listing(models.Model):
     # create categories but just in case, if category is deleted, the 
     # listing will survive.
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    price = models.DecimalField(max_digits=12, decimal_places=2)
 
     # Optional
     image = models.ImageField(blank=True)

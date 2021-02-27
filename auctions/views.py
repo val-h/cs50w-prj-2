@@ -82,5 +82,7 @@ def create_listing(request):
 def listing_view(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     return render(request, 'auctions/listing.html', {
+        # Doesnt't save/load the image file corectly
+        # look for how i set up the images on the blog app
         'listing': listing,
     })
