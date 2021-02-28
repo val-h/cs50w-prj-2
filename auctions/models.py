@@ -44,7 +44,6 @@ class Listing(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     price = models.DecimalField(max_digits=12, decimal_places=2)
-    # bids = models.ManyToOneRel(Bid, on_delete=models.PROTECT, related_name='current_bids')
 
     # Optional
     image = models.ImageField(upload_to="images/", blank=True)
@@ -54,8 +53,8 @@ class Listing(models.Model):
         return f"{self.title}, created by: {self.owner}"
 
 class Bid(models.Model):
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item")
-    bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bidder")
+    listing = models.ManyToManyField(Listing, related_name="bids")
+    bidder = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
 

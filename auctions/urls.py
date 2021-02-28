@@ -15,4 +15,7 @@ urlpatterns = [
     path("watchlist/", views.watchlist_view, name='watchlist'),
     path("categories/", views.categories_view, name='categories'),
     path("categories/<int:category_id>", views.category_view, name='category'),
+
+    # forms
+    path("bid/<int:listing_id>", views.bid, name="bid"),
 ]

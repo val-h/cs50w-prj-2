@@ -29,6 +29,11 @@
 <div>
     <!-- To be a form -->
     <a href="#">Bid</a>
+    <form action="{% url 'auctions:bid' listing.id %}" method="POST">
+        {% csrf_token %}
+        {{ bid_form }}
+        <input type="submit" value="Place bid">
+    </form>
 </div>
 {% endif %}
 

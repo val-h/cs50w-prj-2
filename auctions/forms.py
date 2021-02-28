@@ -77,8 +77,10 @@ class ListingForm(forms.ModelForm):
 class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
-        fields = []
-        pass
+        fields = [
+            'amount',
+        ]
+        labels = {}
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -89,5 +91,7 @@ class CategoryForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = []
+        fields = [
+            'content',
+        ]
         pass

@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from .models import Category, Listing, User
-from .forms import ListingForm
+from .forms import BidForm, ListingForm
 
 def index(request):
     listings = Listing.objects.all()
@@ -102,6 +102,7 @@ def listing_view(request, listing_id):
         # Doesnt't save/load the image file corectly
         # look for how i set up the images on the blog app
         'listing': listing,
+        'bid_form': BidForm(),
     })
 
 @login_required
@@ -122,3 +123,15 @@ def category_view(request, category_id):
     return render(request, 'auctions/category.html', {
         'category': category,
     })
+
+def bid(request, listing_id):
+    if request.method == "POST":
+        listing = Listing.objects.get(id=listing_id)
+        form = BidForm(request.POST)
+        if form.is_valid():
+            new_bid = form.save(commit=False)
+            new_bid.listing = listing
+            new_bid.bidder = request.user
+            new_bid.save()
+            # listing.set() required, look at the error
+            return redirect('auctions:listing', listing_id)
