@@ -25,6 +25,12 @@
                 <a class="nav-link" href="{% url 'auctions:create_listing' %}">Create listing</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="{% url 'auctions:watchlist' %}">Watchlist</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'auctions:categories' %}">Categories</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="{% url 'auctions:logout' %}">Log Out</a>
             </li>
             {% else %}
@@ -39,5 +45,8 @@
         <hr>
         {% block body %}
         {% endblock %}
+        <footer style="text-align: center; background-color: antiquewhite;">
+            <div>Created by: <a href="https://github.com/val-h" target="_blank">val-h</a></div>
+        </footer>
     </body>
 </html>

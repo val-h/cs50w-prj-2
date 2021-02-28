@@ -1,7 +1,7 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
-Placeholder
+<h3>{{ form.non_field_errors }}</h3>
 <form action="{% url 'auctions:create_listing' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}

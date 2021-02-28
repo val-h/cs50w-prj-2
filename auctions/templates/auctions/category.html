@@ -1,0 +1,13 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+    {% for listing in category.listings %}
+        <div>
+            {{ listing.title }}
+        </div>
+    {% empty %}
+        <div>
+            No listings available for this category.
+        </div>
+    {% endfor %}
+{% endblock %}

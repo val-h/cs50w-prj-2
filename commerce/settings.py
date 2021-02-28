@@ -121,5 +121,17 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # MEDIA_ROOT = '/home/val-h/Dev/web50-projects/commerce/media'
+
+
+# My custom settings
+
+MAX_IMAGE_SIZE = 6.0 # In MBs
+ALLOWED_IMAGE_FORMATS = (
+    # 'bmp',
+    'jpg',
+    'jpeg',
+    'png',
+    'gif',
+)

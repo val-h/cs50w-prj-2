@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from .models import Listing, User
+from .models import Category, Listing, User
 from .forms import ListingForm
 
 def index(request):
@@ -79,12 +79,17 @@ def register(request):
 def create_listing(request):
     if request.method == 'POST':
         # Never forget the request.FILES...
+        # source: https://djangocentral.com/uploading-images-with-django/
         form = ListingForm(request.POST, request.FILES)
         if form.is_valid():
             new_listing = form.save(commit=False)
             new_listing.owner = request.user
             new_listing.save()
             return redirect('auctions:index')
+        else:
+            return render(request, 'auctions/create_listing.html', {
+                'form': form,
+            })
     else:
         form = ListingForm()
         return render(request, 'auctions/create_listing.html', {
@@ -97,4 +102,23 @@ def listing_view(request, listing_id):
         # Doesnt't save/load the image file corectly
         # look for how i set up the images on the blog app
         'listing': listing,
+    })
+
+@login_required
+def watchlist_view(request):
+    watchlist = None # To get current watchlist for a user
+    return render(request, 'auctions/watchlist.html', {
+        'watchlist': watchlist,
+    })
+
+def categories_view(request):
+    categories = Category.objects.all()
+    return render(request, 'auctions/categories.html', {
+        'categories': categories,
+    })
+
+def category_view(request, category_id):
+    category = Category.objects.get(id=category_id)
+    return render(request, 'auctions/category.html', {
+        'category': category,
     })

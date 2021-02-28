@@ -11,13 +11,30 @@
     {% if listing.image %}
     <div>
         <!-- Problem with the image file for listings -->
-        <img src="{{ listing.image.url }}" alt="Listing Image">
-        Listing caption
+        {% if listing.image %}
+            <img src="{{ listing.image.url }}" alt="Listing Image">
+            Listing caption
+        {% endif %}
     </div>
     {% endif %}
     <p>
         {{ listing.description }}
     </p>
+</div>
+
+{% if listing.owner == user %}
+    <a href="#">Close Auction</a>
+<!-- Bids -->
+{% elif user.is_authenticated %}
+<div>
+    <!-- To be a form -->
+    <a href="#">Bid</a>
+</div>
+{% endif %}
+
+<!-- Comments -->
+<div>
+    <a href="#">Add comment</a>
 </div>
 
 {% endblock %}

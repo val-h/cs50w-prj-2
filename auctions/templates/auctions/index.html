@@ -4,17 +4,25 @@
     <h2>Active Listings</h2>
     <ul>
         {% for listing in listings %}
-            <!-- To point to a dedicated page for the listing -->
+        <!-- To be a thumbnail type -->
+        <div class="#"> 
             <li style="margin-bottom: 15px;">
                 <a href="{% url 'auctions:listing' listing.id %}">
                     {{ listing.title }}
                 </a><br>
                 <b>Price: {{ listing.price }}</b><br>
                 {{ listing.description }}
+                {% if listing.image %}
+                <div>
+                    <img src="{{ listing.image.url }}" alt="{{ listing.image.url }}">
+                </div>
+                {% endif %}
             </li>
+        </div>
         {% empty %}
+        <div>
             <li>Empty : (</li>
+        </div>
         {% endfor %}
     </ul>
-    TODO
 {% endblock %}

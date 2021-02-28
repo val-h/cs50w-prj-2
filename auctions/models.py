@@ -28,6 +28,10 @@ class Category(models.Model):
     title = models.CharField(max_length=40)
     description = models.TextField()
 
+    # Many to one field for listings needed
+    # listings = models.ManyToOneRel(Listing)
+    listings = None # temp
+
     # See how to implement it with a function
     number_of_listings = IntegerField(default=0)
 
@@ -39,14 +43,12 @@ class Listing(models.Model):
     description = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
-    # Highly unlikely to delete Categories, unless i allow users to 
-    # create categories but just in case, if category is deleted, the 
-    # listing will survive.
-    category = models.ForeignKey(Category, on_delete=models.PROTECT)
     price = models.DecimalField(max_digits=12, decimal_places=2)
+    # bids = models.ManyToOneRel(Bid, on_delete=models.PROTECT, related_name='current_bids')
 
     # Optional
     image = models.ImageField(upload_to="images/", blank=True)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, blank=True)
 
     def __str__(self) -> str:
         return f"{self.title}, created by: {self.owner}"

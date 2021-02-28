@@ -1,0 +1,13 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+    {% for listing in watchlist %}
+        <div>
+            {{ listing.title }}
+        </div>
+    {% empty %}
+        <div>
+            No listings available.
+        </div>
+    {% endfor %}
+{% endblock %}
