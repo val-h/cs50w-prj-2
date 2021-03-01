@@ -9,37 +9,71 @@
 <div>
     <div>Price: {{ listing.price }}</div>
     {% if listing.image %}
-    <div>
+    <div id="img-listing">
         <!-- Problem with the image file for listings -->
-        {% if listing.image %}
             <img src="{{ listing.image.url }}" alt="Listing Image">
-            Listing caption
-        {% endif %}
+            <div id="img-caption">
+            Image caption
+            </div>
     </div>
     {% endif %}
-    <p>
+    <!-- <p>
         {{ listing.description }}
-    </p>
+    </p> -->
+</div>
+
+<!-- Add to watchlist -->
+<div id="watchlist-listing">
+    <a href="#">Add to watchlist</a>
+</div>
+
+<!-- Bids -->
+<div>
+    <h2>Bids: </h2>
+    {% if bids %}
+        <span>{{ total_bids }} bid(s) so far.</span>
+        {% for bid in bids %}
+            <li>By: {{ bid.bidder }}, price: {{ bid.amount }}</li>
+        {% endfor %}
+    {% else %}
+        <li>No available bids.</li>
+    {% endif %}
 </div>
 
 {% if listing.owner == user %}
     <a href="#">Close Auction</a>
-<!-- Bids -->
 {% elif user.is_authenticated %}
-<div>
-    <!-- To be a form -->
-    <a href="#">Bid</a>
-    <form action="{% url 'auctions:bid' listing.id %}" method="POST">
-        {% csrf_token %}
-        {{ bid_form }}
-        <input type="submit" value="Place bid">
-    </form>
-</div>
+    <!-- Bid -->
+    <div>
+        <h3>{{ form.non_field_errors }}</h3>
+        <form action="{% url 'auctions:bid' listing.id %}" method="POST">
+            {% csrf_token %}
+            {{ bid_form }}
+            <input type="submit" value="Place bid">
+        </form>
+    </div>
 {% endif %}
-
-<!-- Comments -->
+    <!-- Comments -->
+    {% if user.is_authenticated %}
 <div>
+    <!-- TO be a form -->
     <a href="#">Add comment</a>
 </div>
+
+<h3>Details:</h3>
+<ul>
+    <li>Listed by: {{ listing.owner }}</li>
+    <li>Created: {{ listing.date }}</li>
+    {% if listing.category %}
+    <li>Category: 
+        <a href="{% url 'auctions:category' listing.category.id %}">{{ listing.category }}</a>
+    </li>
+    {% else %}
+    <li>Category: No category!</li>
+    {% endif %}
+    <li>Description:</li>
+    <p>{{ listing.description }}</p>
+</ul>
+{% endif %}
 
 {% endblock %}

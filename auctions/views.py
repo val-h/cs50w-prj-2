@@ -98,10 +98,14 @@ def create_listing(request):
 
 def listing_view(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
+    bids = listing.bids.all()
+    total_bids = len(bids)
     return render(request, 'auctions/listing.html', {
         # Doesnt't save/load the image file corectly
         # look for how i set up the images on the blog app
         'listing': listing,
+        'bids': bids,
+        'total_bids': total_bids,
         'bid_form': BidForm(),
     })
 
@@ -124,14 +128,19 @@ def category_view(request, category_id):
         'category': category,
     })
 
+@login_required
 def bid(request, listing_id):
     if request.method == "POST":
         listing = Listing.objects.get(id=listing_id)
         form = BidForm(request.POST)
         if form.is_valid():
             new_bid = form.save(commit=False)
-            new_bid.listing = listing
             new_bid.bidder = request.user
+            new_bid.listing = listing
             new_bid.save()
             # listing.set() required, look at the error
             return redirect('auctions:listing', listing_id)
+
+@login_required
+def comment(request, listing_id):
+    pass

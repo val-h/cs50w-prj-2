@@ -28,20 +28,13 @@ class Category(models.Model):
     title = models.CharField(max_length=40)
     description = models.TextField()
 
-    # Many to one field for listings needed
-    # listings = models.ManyToOneRel(Listing)
-    listings = None # temp
-
-    # See how to implement it with a function
-    number_of_listings = IntegerField(default=0)
-
     def __str__(self) -> str:
         return f"{self.title}"
 
 class Listing(models.Model):
     title = models.CharField(max_length=80)
     description = models.TextField()
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
     date = models.DateTimeField(auto_now_add=True)
     price = models.DecimalField(max_digits=12, decimal_places=2)
 
@@ -53,20 +46,20 @@ class Listing(models.Model):
         return f"{self.title}, created by: {self.owner}"
 
 class Bid(models.Model):
-    listing = models.ManyToManyField(Listing, related_name="bids")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")
     bidder = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
 
     def __str__(self) -> str:
-        return f"Bid on: {self.listing}, by : {self.bidder}"
+        return f"Bid on: {self.listing}; bid by : {self.bidder}"
 
 class Comment(models.Model):
     # Deleting the comment on User deletion may be optional
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commentor")
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listing")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
     date = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
 
     def __str__(self) -> str:
-        return f"Comment on: {self.listing}, posted by: {self.owner}"
+        return f"Comment on: {self.listing}; posted by: {self.owner}"
