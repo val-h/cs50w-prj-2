@@ -141,6 +141,9 @@ def bid(request, listing_id):
             # listing.set() required, look at the error
             return redirect('auctions:listing', listing_id)
 
+            # I have no time to work on the project before work.......
+            # work on the lwatchlist feature and finish the bids
+
 @login_required
 def comment(request, listing_id):
     pass
