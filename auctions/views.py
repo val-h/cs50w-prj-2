@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from .models import Category, Listing, User
+from .models import Category, Listing, User, Watchlist
 from .forms import BidForm, ListingForm
 
 def index(request):
@@ -109,13 +109,6 @@ def listing_view(request, listing_id):
         'bid_form': BidForm(crnt_b=None),
     })
 
-@login_required
-def watchlist_view(request):
-    watchlist = request.user.watchlist # To get current watchlist for a user
-    return render(request, 'auctions/watchlist.html', {
-        'watchlist': watchlist,
-    })
-
 def categories_view(request):
     categories = Category.objects.all()
     return render(request, 'auctions/categories.html', {
@@ -197,12 +190,22 @@ def bid(request, listing_id):
 def comment(request, listing_id):
     pass
 
+@login_required
+def watchlist_view(request):
+    watchlist = request.user.watchlist # To get current watchlist for a user
+    print(watchlist, ' - test')
+    return render(request, 'auctions/watchlist.html', {
+        'watchlist': watchlist,
+    })
+    
 # Finish the watchlist feature
 # figure out the manytomany realtions
 @login_required
 def add_to_watchlist(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     user = request.user
-    user.listing_set.add(listing)
+    # If the user doesn't have a watchlist, create it
+    if not user.watchlist:
+        new_watchlist = Watchlist(user=user)
+    user.watchlist.add(listing)
     return redirect('auctions:listing', listing_id)
-    

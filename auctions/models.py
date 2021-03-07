@@ -39,7 +39,6 @@ class Listing(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     start_price = models.DecimalField(max_digits=12, decimal_places=2)
     current_price = models.DecimalField(max_digits=12, decimal_places=2)
-    watchlists = models.ManyToManyField(User, related_name='watchlist')
 
     # Optional
     image = models.ImageField(upload_to="images/", blank=True)
@@ -47,6 +46,11 @@ class Listing(models.Model):
 
     def __str__(self) -> str:
         return f"{self.title}, created by: {self.owner}"
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
+    # related name is for watchlist to display items with current watchlist number
+    listings = models.ManyToManyField(Listing, blank=True, related_name="watchlists")
 
 class Bid(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")
