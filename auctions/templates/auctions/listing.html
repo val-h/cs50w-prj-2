@@ -7,11 +7,11 @@
 
 <!-- main content -->
 <div>
-    <div>Price: {{ listing.price }}</div>
+    <div>Initial price: {{ listing.price }}</div>
     {% if listing.image %}
     <div id="img-listing">
         <!-- Problem with the image file for listings -->
-            <img src="{{ listing.image.url }}" alt="Listing Image">
+            <img src="{{ listing.image.url }}" style="max-width: 600px;" alt="Listing Image">
             <div id="img-caption">
             Image caption
             </div>
@@ -24,11 +24,13 @@
 
 <!-- Add to watchlist -->
 <div id="watchlist-listing">
-    <a href="#">Add to watchlist</a>
+    <a href="{% url 'auctions:add_to_watchlist' listing.id %}">Add to watchlist</a>
 </div>
 
 <!-- Bids -->
 <div>
+    <h2>Current bid: {{ listing.current_price }}</h2>
+    <h4>Initial price: {{ listing.start_price }}</h4>
     <h2>Bids: </h2>
     {% if bids %}
         <span>{{ total_bids }} bid(s) so far.</span>
@@ -45,7 +47,7 @@
 {% elif user.is_authenticated %}
     <!-- Bid -->
     <div>
-        <h3>{{ form.non_field_errors }}</h3>
+        <h3>{{ bid_form.non_field_errors }}</h3>
         <form action="{% url 'auctions:bid' listing.id %}" method="POST">
             {% csrf_token %}
             {{ bid_form }}

@@ -3,6 +3,7 @@ from typing import List
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.fields import IntegerField
+from decimal import Decimal
 
 # from django.utils.timezone import now as date_now
 
@@ -36,7 +37,9 @@ class Listing(models.Model):
     description = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
     date = models.DateTimeField(auto_now_add=True)
-    price = models.DecimalField(max_digits=12, decimal_places=2)
+    start_price = models.DecimalField(max_digits=12, decimal_places=2)
+    current_price = models.DecimalField(max_digits=12, decimal_places=2)
+    watchlists = models.ManyToManyField(User, related_name='watchlist')
 
     # Optional
     image = models.ImageField(upload_to="images/", blank=True)
@@ -47,7 +50,7 @@ class Listing(models.Model):
 
 class Bid(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")
-    bidder = models.ForeignKey(User, on_delete=models.CASCADE)
+    bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bids')
     date = models.DateTimeField(auto_now_add=True)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
 

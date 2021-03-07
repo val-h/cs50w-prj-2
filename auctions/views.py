@@ -1,5 +1,6 @@
 from typing import List
 from django.contrib.auth import authenticate, login, logout
+from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.db.utils import OperationalError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -84,6 +85,7 @@ def create_listing(request):
         if form.is_valid():
             new_listing = form.save(commit=False)
             new_listing.owner = request.user
+            new_listing.current_price = request.POST['start_price']
             new_listing.save()
             return redirect('auctions:index')
         else:
@@ -106,7 +108,7 @@ def listing_view(request, listing_id):
         'listing': listing,
         'bids': bids,
         'total_bids': total_bids,
-        'bid_form': BidForm(),
+        'bid_form': BidForm(crnt_b=None),
     })
 
 @login_required
@@ -128,22 +130,79 @@ def category_view(request, category_id):
         'category': category,
     })
 
+# Didnt work as expected -> keeping it just for proof of work
+#  Finally worked ;d
+def check_user_bid_on_listing(listing, user, amount):
+    # Make a querry set and take the first(and only) result
+    current_bid = listing.bids.filter(bidder=user)[0]
+    if current_bid and current_bid.amount < amount:
+        return True
+    elif current_bid.amount >= amount:
+        return False
+    # If the user doesn't have a bid at all
+    return True
+    #     if bid.bidder == user:
+    #         if bid.amount > amount:
+    #             return True
+    #         elif bid.amount <= amount:
+    #             return False
+    # return True
+
+    # if user.bids:
+    #     # u_bid = [u_bid for u_bid in user.bids if u_bid.listing.id == listing.id]
+    #     u_bid = user.bids
+    #     print(u_bid)
+    #     if u_bid and u_bid > amount:
+    #         return True
+    #     elif u_bid <= amount:
+    #         return False
+    #     return True
+    # return True
+
+# For the record, I spent another 5 hours just to figure out the validation
+# for this form -> max 1 bid per user and comparing the bids.
+
 @login_required
 def bid(request, listing_id):
     if request.method == "POST":
         listing = Listing.objects.get(id=listing_id)
-        form = BidForm(request.POST)
+        bidder = request.user
+        # Take the first (and only) result for the user's bid
+        try:
+            current_bid = listing.bids.filter(bidder=bidder)[0]
+        except:
+            current_bid = None
+
+        form = BidForm(request.POST, crnt_b=current_bid)
         if form.is_valid():
             new_bid = form.save(commit=False)
-            new_bid.bidder = request.user
             new_bid.listing = listing
+            new_bid.bidder = bidder
             new_bid.save()
-            # listing.set() required, look at the error
             return redirect('auctions:listing', listing_id)
-
-            # I have no time to work on the project before work.......
-            # work on the lwatchlist feature and finish the bids
+        else:
+            bids = listing.bids.all()
+            total_bids = len(bids)
+            return render(request, 'auctions/listing.html', {
+                'listing': listing,
+                'bids': bids,
+                'total_bids': total_bids,    
+                'bid_form': form,
+            })
+        
+        # if check_user_bid_on_listing(listing, bidder, int(request.POST['amount'])):
+        # else:
+        #     pass
+        #     # send error for form amount
 
 @login_required
 def comment(request, listing_id):
     pass
+
+@login_required
+def add_to_watchlist(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    user = request.user
+    user.listing_set.add(listing)
+    return redirect('auctions:listing', listing_id)
+    

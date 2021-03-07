@@ -70,38 +70,34 @@ class ListingForm(forms.ModelForm):
         fields = [
         'title',
         'category',
-        'price',
+        'start_price',
         'description',
         'image',]
-        labels = {}
 
 # TODO
 class BidForm(forms.ModelForm):
 
-    # def __init__(self, *args):
-    #     self.request = args[0]  # Take the request
-    #     self.listing_id = args[1]   # Take the listing_id
+    def __init__(self, *args, **kwargs):
+        self.current_bid = kwargs.pop('crnt_b')
+        super(BidForm, self).__init__(*args, **kwargs)
 
     # Trying to check if the user already has a bid and if the price is lower than the current one
-    def clean_amaunt(self):
+    def clean_amount(self):
         requested_bid_price = self.cleaned_data.get('amount')
+        # print(requested_bid_price, type(requested_bid_price))
+        if self.current_bid and self.current_bid.amount >= requested_bid_price:
+            raise forms.ValidationError(_(f'The amount must be higher than your current bid: {self.current_bid.amount}.'), code='invalid')        
+        return requested_bid_price
+
         # I really don't know what im doing here anymore
         # look into https://stackoverflow.com/questions/53955850/pass-variable-from-view-to-form-django
         # these 2 variables are none since cleaned_data doesn't have them ;d
-        listing = Listing.objects.get(id=self.cleaned_data.get('listing_id'))
-        bid = listing.bids.filter(bidder=self.cleaned_data.get('user'))[0]
-        if bid and bid.amount >= requested_bid_price:
-            raise forms.ValidationError(_(f'The amount must be higher than your current bid: {bid.amount}.'), code='invalid')        
-        return requested_bid_price
-    
+
     class Meta:
         model = Bid
-        # needed for the view, so it doesn't pass it as a post var
-        # exclude = ('listing_id',)
         fields = [
             'amount',
         ]
-        labels = {}
 
 class CategoryForm(forms.ModelForm):
     class Meta:

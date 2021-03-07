@@ -1,3 +1,4 @@
+from os import name
 from django.urls import path
 
 from . import views
@@ -19,4 +20,5 @@ urlpatterns = [
     # forms
     path("bid/<int:listing_id>", views.bid, name="bid"),
     path("comment/<int:listing_id>", views.comment, name="comment"),
+    path("add_to_watchlist/<int:listing_id>", views.add_to_watchlist, name="add_to_watchlist")
 ]
