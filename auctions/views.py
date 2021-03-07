@@ -1,6 +1,4 @@
-from typing import List
 from django.contrib.auth import authenticate, login, logout
-from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.db.utils import OperationalError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -113,7 +111,7 @@ def listing_view(request, listing_id):
 
 @login_required
 def watchlist_view(request):
-    watchlist = None # To get current watchlist for a user
+    watchlist = request.user.watchlist # To get current watchlist for a user
     return render(request, 'auctions/watchlist.html', {
         'watchlist': watchlist,
     })
@@ -199,6 +197,8 @@ def bid(request, listing_id):
 def comment(request, listing_id):
     pass
 
+# Finish the watchlist feature
+# figure out the manytomany realtions
 @login_required
 def add_to_watchlist(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
