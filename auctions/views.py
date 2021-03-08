@@ -192,20 +192,33 @@ def comment(request, listing_id):
 
 @login_required
 def watchlist_view(request):
-    watchlist = request.user.watchlist # To get current watchlist for a user
+    # By far not the most effective method(don't know if it even works)
+    # I will make watchlists from the admin app until i implement a proper 
+    # watchlist for the user on init -> creation
+    if not request.user.watchlist.all()[0]:
+        new_watchlist = Watchlist(user=request.user)
+        new_watchlist.save()
+    watchlist = request.user.watchlist.get(id=1) # To get current watchlist for a user
+    print(watchlist)
     print(watchlist, ' - test')
     return render(request, 'auctions/watchlist.html', {
-        'watchlist': watchlist,
+        'listings': watchlist.listings.all(),
     })
     
 # Finish the watchlist feature
 # figure out the manytomany realtions
+
+# FINALLY WORKED!!!
+# Still really bad implementation but it worked!
 @login_required
 def add_to_watchlist(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     user = request.user
+    watchlist = user.watchlist.all()[0]
     # If the user doesn't have a watchlist, create it
     if not user.watchlist:
         new_watchlist = Watchlist(user=user)
-    user.watchlist.add(listing)
+        new_watchlist.save()
+    print('test', user.watchlist)
+    watchlist.listings.add(listing)
     return redirect('auctions:listing', listing_id)
