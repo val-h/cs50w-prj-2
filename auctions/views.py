@@ -106,7 +106,7 @@ def listing_view(request, listing_id):
         'listing': listing,
         'bids': bids,
         'total_bids': total_bids,
-        'bid_form': BidForm(crnt_b=None),
+        'bid_form': BidForm(crnt_b=None, l=listing),
     })
 
 def categories_view(request):
@@ -157,19 +157,26 @@ def check_user_bid_on_listing(listing, user, amount):
 def bid(request, listing_id):
     if request.method == "POST":
         listing = Listing.objects.get(id=listing_id)
+        print(listing.bids.all())
         bidder = request.user
         # Take the first (and only) result for the user's bid
         try:
             current_bid = listing.bids.filter(bidder=bidder)[0]
+            print(current_bid)
         except:
             current_bid = None
 
-        form = BidForm(request.POST, crnt_b=current_bid)
+        form = BidForm(request.POST, crnt_b=current_bid, l=listing)
         if form.is_valid():
+            # delete the current bid
+            listing.bids.filter(bidder=bidder).delete() # listing.bids.remove(current_bid) doesnt work
             new_bid = form.save(commit=False)
             new_bid.listing = listing
             new_bid.bidder = bidder
             new_bid.save()
+            listing.current_price = new_bid.amount
+            listing.save()
+            print(current_bid)
             return redirect('auctions:listing', listing_id)
         else:
             bids = listing.bids.all()

@@ -79,6 +79,7 @@ class BidForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.current_bid = kwargs.pop('crnt_b')
+        self.listing = kwargs.pop('l')
         super(BidForm, self).__init__(*args, **kwargs)
 
     # Trying to check if the user already has a bid and if the price is lower than the current one
@@ -87,6 +88,8 @@ class BidForm(forms.ModelForm):
         # print(requested_bid_price, type(requested_bid_price))
         if self.current_bid and self.current_bid.amount >= requested_bid_price:
             raise forms.ValidationError(_(f'The amount must be higher than your current bid: {self.current_bid.amount}.'), code='invalid')        
+        elif requested_bid_price <= self.listing.current_price:
+            raise forms.ValidationError(_(f'The amount must be higher than the current price: {self.listing.current_price}.'), code='invalid')
         return requested_bid_price
 
         # I really don't know what im doing here anymore
