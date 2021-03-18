@@ -39,6 +39,7 @@ class Listing(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     start_price = models.DecimalField(max_digits=12, decimal_places=2)
     current_price = models.DecimalField(max_digits=12, decimal_places=2)
+    active = models.BooleanField(default=True)
 
     # Optional
     image = models.ImageField(upload_to="images/", blank=True)
