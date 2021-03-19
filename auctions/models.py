@@ -1,10 +1,9 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.fields import IntegerField
-from decimal import Decimal
-
+# from decimal import Decimal
+# from django.db.models.fields.related import ForeignKey
 # from django.utils.timezone import now as date_now
-
 
 class User(AbstractUser):
     pass
@@ -38,6 +37,7 @@ class Listing(models.Model):
     start_price = models.DecimalField(max_digits=12, decimal_places=2)
     current_price = models.DecimalField(max_digits=12, decimal_places=2)
     active = models.BooleanField(default=True)
+    winner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="auctions_won")
 
     # Optional
     image = models.ImageField(upload_to="images/", blank=True)

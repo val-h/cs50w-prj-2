@@ -19,8 +19,8 @@ from django.urls import include, path
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path("", include("auctions.urls")),
     path("admin/", admin.site.urls),
-    path("", include("auctions.urls"))
 ]
 
 if settings.DEBUG:

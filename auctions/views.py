@@ -115,6 +115,7 @@ def listing_view(request, listing_id):
 def close_auction(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     listing.active = False
+    # listing.winner = None # highest bidder 
     listing.save()
     return redirect('auctions:listing', listing_id)
 
