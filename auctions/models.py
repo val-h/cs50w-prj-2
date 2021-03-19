@@ -53,6 +53,9 @@ class Watchlist(models.Model):
     # related name is for watchlist to display items with current watchlist number
     listings = models.ManyToManyField(Listing, blank=True, related_name="watchlists")
 
+    def __str__(self) -> str:
+        return f"{self.user.first_name.title()}\'s Watchlist"
+
 class Bid(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bids')

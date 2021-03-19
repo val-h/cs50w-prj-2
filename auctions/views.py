@@ -107,6 +107,7 @@ def listing_view(request, listing_id):
         'listing': listing,
         'bids': bids,
         'total_bids': total_bids,
+        'user_watchlist': request.user.watchlist.get(user=request.user).listings.all(),
         'bid_form': BidForm(crnt_b=None, l=listing),
     })
 
@@ -216,18 +217,22 @@ def comment(request, listing_id):
     pass
 
 # Create a watchlist for the user, helper function
-def _create_watchlist(user):
-    new_watchlist = Watchlist(user=user)
-    new_watchlist.save()
+def _get_watchlist(user):
+    try:
+        watchlist = user.watchlist.get(user=user)
+    except:
+        new_watchlist = Watchlist(user=user)
+        new_watchlist.save()
+        watchlist = user.watchlist.get(user=user)
+    return watchlist
+    # watchlist = user.watchlist.filter(user=user)
 
 @login_required
 def watchlist_view(request):
     # By far not the most effective method(don't know if it even works)
     # I will make watchlists from the admin app until i implement a proper 
     # watchlist for the user on init -> creation
-    if not request.user.watchlist:
-        _create_watchlist(request.user)
-    watchlist = request.user.watchlist.get(id=1)
+    watchlist = _get_watchlist(request.user)
     return render(request, 'auctions/watchlist.html', {
         'listings': watchlist.listings.all(),
     })
@@ -240,15 +245,13 @@ def watchlist_view(request):
 @login_required
 def add_to_watchlist(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
-    if not request.user.watchlist:
-        _create_watchlist(request.user)
-    watchlist = request.user.watchlist.get(id=1)
+    watchlist = _get_watchlist(request.user)
     watchlist.listings.add(listing)
     return redirect('auctions:listing', listing_id)
 
 @login_required
 def remove_from_watchlist(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
-    watchlist = request.user.watchlist.get(id=1)
+    watchlist = _get_watchlist(request.user)
     watchlist.listings.remove(listing)
     return redirect('auctions:listing', listing_id)
