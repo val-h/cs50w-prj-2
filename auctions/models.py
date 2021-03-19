@@ -1,5 +1,3 @@
-from typing import List
-# from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.fields import IntegerField
@@ -43,7 +41,7 @@ class Listing(models.Model):
 
     # Optional
     image = models.ImageField(upload_to="images/", blank=True)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, blank=True, related_name="listings")
 
     def __str__(self) -> str:
         return f"{self.title}, created by: {self.owner}"

@@ -118,7 +118,7 @@ def categories_view(request):
 def category_view(request, category_id):
     category = Category.objects.get(id=category_id)
     return render(request, 'auctions/category.html', {
-        'category': category,
+        'listings': category.listings.all(),
     })
 
 # Didnt work as expected -> keeping it just for proof of work
@@ -202,12 +202,12 @@ def watchlist_view(request):
     # By far not the most effective method(don't know if it even works)
     # I will make watchlists from the admin app until i implement a proper 
     # watchlist for the user on init -> creation
-    if not request.user.watchlist.all()[0]:
+    try:
+        watchlist = request.user.watchlist.get(id=1) # To get current watchlist for a user
+    except:
         new_watchlist = Watchlist(user=request.user)
         new_watchlist.save()
-    watchlist = request.user.watchlist.get(id=1) # To get current watchlist for a user
-    print(watchlist)
-    print(watchlist, ' - test')
+        watchlist = request.user.watchlist.get(id=1)
     return render(request, 'auctions/watchlist.html', {
         'listings': watchlist.listings.all(),
     })
