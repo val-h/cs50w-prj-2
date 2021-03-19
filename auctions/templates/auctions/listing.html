@@ -1,6 +1,10 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
+{% if listing.active == False %}
+    <h3>Listing is closed. TODO</h3>
+{% endif %}
+
 <h1>{{ listing.title }}</h1>
 <h3>Created by: {{ listing.owner }}</h3>
 <h5>{{ listing.date }}</h5>
@@ -43,7 +47,7 @@
 </div>
 
 {% if listing.owner == user %}
-    <a href="#">Close Auction</a>
+    <a href="{% url 'auctions:close_auction' listing.id %}">Close Auction</a>
 {% elif user.is_authenticated %}
     <!-- Bid -->
     <div>

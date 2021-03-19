@@ -20,5 +20,8 @@ urlpatterns = [
     # forms
     path("bid/<int:listing_id>", views.bid, name="bid"),
     path("comment/<int:listing_id>", views.comment, name="comment"),
-    path("add_to_watchlist/<int:listing_id>", views.add_to_watchlist, name="add_to_watchlist")
+    path("add_to_watchlist/<int:listing_id>", views.add_to_watchlist, name="add_to_watchlist"),
+
+    # misc (i don't know of a better name)
+    path("listing/<int:listing_id>/close_auction", views.close_auction, name="close_auction"),
 ]

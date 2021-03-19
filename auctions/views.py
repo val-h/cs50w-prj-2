@@ -1,3 +1,4 @@
+from typing import List
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.db.utils import OperationalError
@@ -108,6 +109,14 @@ def listing_view(request, listing_id):
         'total_bids': total_bids,
         'bid_form': BidForm(crnt_b=None, l=listing),
     })
+
+# Working :D
+@login_required
+def close_auction(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    listing.active = False
+    listing.save()
+    return redirect('auctions:listing', listing_id)
 
 def categories_view(request):
     categories = Category.objects.all()
@@ -226,6 +235,5 @@ def add_to_watchlist(request, listing_id):
     if not user.watchlist:
         new_watchlist = Watchlist(user=user)
         new_watchlist.save()
-    print('test', user.watchlist)
     watchlist.listings.add(listing)
     return redirect('auctions:listing', listing_id)
