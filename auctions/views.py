@@ -6,7 +6,18 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from .models import Category, Listing, User, Watchlist
-from .forms import BidForm, ListingForm
+from .forms import BidForm, ListingForm, CommentForm
+
+# Helper functions
+# Create a watchlist for the user, helper function
+def _get_watchlist(user):
+    try:
+        watchlist = user.watchlist.get(user=user)
+    except:
+        new_watchlist = Watchlist(user=user)
+        new_watchlist.save()
+        watchlist = user.watchlist.get(user=user)
+    return watchlist
 
 def index(request):
     listings = Listing.objects.all()
@@ -101,14 +112,18 @@ def listing_view(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     bids = listing.bids.all()
     total_bids = len(bids)
+    user_watchlist = _get_watchlist(request.user).listings.all()
+    comments = listing.comments.all()
     return render(request, 'auctions/listing.html', {
         # Doesnt't save/load the image file corectly
         # look for how i set up the images on the blog app
         'listing': listing,
         'bids': bids,
         'total_bids': total_bids,
-        'user_watchlist': request.user.watchlist.get(user=request.user).listings.all(),
+        'user_watchlist': user_watchlist,
+        'comments': comments,
         'bid_form': BidForm(crnt_b=None, l=listing),
+        'comment_form': CommentForm(),
     })
 
 # Working :D
@@ -213,21 +228,6 @@ def bid(request, listing_id):
         #     # send error for form amount
 
 @login_required
-def comment(request, listing_id):
-    pass
-
-# Create a watchlist for the user, helper function
-def _get_watchlist(user):
-    try:
-        watchlist = user.watchlist.get(user=user)
-    except:
-        new_watchlist = Watchlist(user=user)
-        new_watchlist.save()
-        watchlist = user.watchlist.get(user=user)
-    return watchlist
-    # watchlist = user.watchlist.filter(user=user)
-
-@login_required
 def watchlist_view(request):
     # By far not the most effective method(don't know if it even works)
     # I will make watchlists from the admin app until i implement a proper 
@@ -255,3 +255,15 @@ def remove_from_watchlist(request, listing_id):
     watchlist = _get_watchlist(request.user)
     watchlist.listings.remove(listing)
     return redirect('auctions:listing', listing_id)
+
+@login_required
+def comment(request, listing_id):
+    if request.method == 'POST':
+        listing = Listing.objects.get(id=listing_id)
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            new_commnet = form.save(commit=False)
+            new_commnet.owner = request.user
+            new_commnet.listing = listing
+            new_commnet.save()
+            return redirect('auctions:listing', listing_id)

@@ -102,6 +102,7 @@ class BidForm(forms.ModelForm):
             'amount',
         ]
 
+# i wanted to make so users can add cattegories and i will finish this!
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category

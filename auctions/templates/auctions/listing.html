@@ -89,10 +89,24 @@
 </div>
 
 <!-- Comments -->
+<div id="comment-section">
+    {% for comment in comments %}
+        <div class="comment">
+            <div>{{ comment.owner }} - {{ comment.date }}</div>
+            <div>{{ comment.content }}</div>
+        </div>
+    {% endfor %}
+</div>
+
 {% if user.is_authenticated %}
     <div>
         <!-- TO be a form -->
-        <a href="#">Add comment</a>
+        <form action="{% url 'auctions:comment' listing.id %}" method="POST">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <input type="submit" value="Add comment">
+        </form>
+        <!-- <a href="#">Add comment</a> -->
     </div>
 {% endif %}
 
