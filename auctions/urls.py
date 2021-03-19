@@ -18,10 +18,15 @@ urlpatterns = [
     path("categories/<int:category_id>", views.category_view, name='category'),
 
     # forms
-    path("bid/<int:listing_id>", views.bid, name="bid"),
-    path("comment/<int:listing_id>", views.comment, name="comment"),
-    path("add_to_watchlist/<int:listing_id>", views.add_to_watchlist, name="add_to_watchlist"),
+    path("listing/<int:listing_id>/bid", views.bid, name="bid"),
+    path("listing/<int:listing_id>/comment", views.comment, name="comment"),
 
-    # misc (i don't know of a better name)
+    # misc (i don't know of a better name) / REST API
+    # I'm trying the REST API impementation (without knowing what it is, never looked into it)
+    # Please don't laugh if this doesn't make sense, in the future i want to see how close 
+    # i was to the concept, when i actually learn it
+    path("listing/<int:listing_id>/add_to_watchlist", views.add_to_watchlist, name="add_to_watchlist"),
+    path("listing/<int:listing_id>/remove_from_watchlist", views.remove_from_watchlist, name="remove_from_watchlist"),
     path("listing/<int:listing_id>/close_auction", views.close_auction, name="close_auction"),
+    path("listing/<int:listing_id>/reopen_auction", views.reopen_auction, name="reopen_auction"),
 ]

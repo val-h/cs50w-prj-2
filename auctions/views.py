@@ -1,4 +1,3 @@
-from typing import List
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.db.utils import OperationalError
@@ -85,6 +84,7 @@ def create_listing(request):
             new_listing = form.save(commit=False)
             new_listing.owner = request.user
             new_listing.current_price = request.POST['start_price']
+            new_listing.winner = None
             new_listing.save()
             return redirect('auctions:index')
         else:
@@ -119,6 +119,13 @@ def close_auction(request, listing_id):
     listing.save()
     return redirect('auctions:listing', listing_id)
 
+@login_required
+def reopen_auction(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    listing.active = True
+    listing.save()
+    return redirect('auctions:listing', listing_id)
+
 def categories_view(request):
     categories = Category.objects.all()
     return render(request, 'auctions/categories.html', {
@@ -133,7 +140,7 @@ def category_view(request, category_id):
 
 # Didnt work as expected -> keeping it just for proof of work
 #  Finally worked ;d
-def check_user_bid_on_listing(listing, user, amount):
+def _check_user_bid_on_listing(listing, user, amount):
     # Make a querry set and take the first(and only) result
     current_bid = listing.bids.filter(bidder=user)[0]
     if current_bid and current_bid.amount < amount:
@@ -184,7 +191,8 @@ def bid(request, listing_id):
             new_bid.listing = listing
             new_bid.bidder = bidder
             new_bid.save()
-            listing.current_price = new_bid.amount
+            listing.current_price = new_bid.amount # change the highest bid
+            listing.winner = bidder # Make the new winner the highest bidder
             listing.save()
             print(current_bid)
             return redirect('auctions:listing', listing_id)
@@ -198,7 +206,7 @@ def bid(request, listing_id):
                 'bid_form': form,
             })
         
-        # if check_user_bid_on_listing(listing, bidder, int(request.POST['amount'])):
+        # if _check_user_bid_on_listing(listing, bidder, int(request.POST['amount'])):
         # else:
         #     pass
         #     # send error for form amount
@@ -207,17 +215,19 @@ def bid(request, listing_id):
 def comment(request, listing_id):
     pass
 
+# Create a watchlist for the user, helper function
+def _create_watchlist(user):
+    new_watchlist = Watchlist(user=user)
+    new_watchlist.save()
+
 @login_required
 def watchlist_view(request):
     # By far not the most effective method(don't know if it even works)
     # I will make watchlists from the admin app until i implement a proper 
     # watchlist for the user on init -> creation
-    try:
-        watchlist = request.user.watchlist.get(id=1) # To get current watchlist for a user
-    except:
-        new_watchlist = Watchlist(user=request.user)
-        new_watchlist.save()
-        watchlist = request.user.watchlist.get(id=1)
+    if not request.user.watchlist:
+        _create_watchlist(request.user)
+    watchlist = request.user.watchlist.get(id=1)
     return render(request, 'auctions/watchlist.html', {
         'listings': watchlist.listings.all(),
     })
@@ -230,11 +240,15 @@ def watchlist_view(request):
 @login_required
 def add_to_watchlist(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
-    user = request.user
-    watchlist = user.watchlist.all()[0]
-    # If the user doesn't have a watchlist, create it
-    if not user.watchlist:
-        new_watchlist = Watchlist(user=user)
-        new_watchlist.save()
+    if not request.user.watchlist:
+        _create_watchlist(request.user)
+    watchlist = request.user.watchlist.get(id=1)
     watchlist.listings.add(listing)
+    return redirect('auctions:listing', listing_id)
+
+@login_required
+def remove_from_watchlist(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    watchlist = request.user.watchlist.get(id=1)
+    watchlist.listings.remove(listing)
     return redirect('auctions:listing', listing_id)

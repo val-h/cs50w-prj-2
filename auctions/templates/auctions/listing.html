@@ -2,28 +2,46 @@
 
 {% block body %}
 {% if listing.active == False %}
-    <h3>Listing is closed. TODO</h3>
+<h3>Listing is closed.</h3>
+{% if listing.winner %}
+<h3>Auction won by: {{ listing.winner }}</h3>
 {% endif %}
-
-<h1>{{ listing.title }}</h1>
-<h3>Created by: {{ listing.owner }}</h3>
-<h5>{{ listing.date }}</h5>
+{% endif %}
 
 <!-- main content -->
 <div>
-    <div>Initial price: {{ listing.price }}</div>
+    <h1>{{ listing.title }}</h1>
+    <!-- <h3>Created by: {{ listing.owner }}</h3>
+    <h5>{{ listing.date }}</h5> -->
     {% if listing.image %}
     <div id="img-listing">
         <!-- Problem with the image file for listings -->
-            <img src="{{ listing.image.url }}" style="max-width: 600px;" alt="Listing Image">
-            <div id="img-caption">
+        <img src="{{ listing.image.url }}" style="max-width: 600px;" alt="Listing Image">
+        <div id="img-caption">
             Image caption
-            </div>
+        </div>
     </div>
     {% endif %}
     <!-- <p>
         {{ listing.description }}
     </p> -->
+</div>
+
+<div>
+    <h3>Details:</h3>
+    <ul>
+        <li>Listed by: {{ listing.owner }}</li>
+        <li>Created: {{ listing.date }}</li>
+        {% if listing.category %}
+        <li>Category: 
+            <a href="{% url 'auctions:category' listing.category.id %}">{{ listing.category }}</a>
+        </li>
+        {% else %}
+        <li>Category: No category!</li>
+        {% endif %}
+        <li>Description:</li>
+        <p>{{ listing.description }}</p>
+    </ul>
 </div>
 
 <!-- Add to watchlist -->
@@ -46,40 +64,32 @@
     {% endif %}
 </div>
 
-{% if listing.owner == user %}
-    <a href="{% url 'auctions:close_auction' listing.id %}">Close Auction</a>
-{% elif user.is_authenticated %}
-    <!-- Bid -->
-    <div>
-        <h3>{{ bid_form.non_field_errors }}</h3>
-        <form action="{% url 'auctions:bid' listing.id %}" method="POST">
-            {% csrf_token %}
-            {{ bid_form }}
-            <input type="submit" value="Place bid">
-        </form>
-    </div>
-{% endif %}
-    <!-- Comments -->
-    {% if user.is_authenticated %}
+<!-- Auction control and Bid feature -->
 <div>
-    <!-- TO be a form -->
-    <a href="#">Add comment</a>
+    {% if listing.owner == user %}
+        {% if listing.active == True %}
+            <a href="{% url 'auctions:close_auction' listing.id %}">Close Auction</a>
+        {% else %}
+            <a href="{% url 'auctions:reopen_auction' listing.id %}">Reopen Auction</a>
+        {% endif %}
+    {% elif user.is_authenticated %}
+        <div>
+            <h3>{{ bid_form.non_field_errors }}</h3>
+            <form action="{% url 'auctions:bid' listing.id %}" method="POST">
+                {% csrf_token %}
+                {{ bid_form }}
+                <input type="submit" value="Place bid">
+            </form>
+        </div>
+    {% endif %}
 </div>
 
-<h3>Details:</h3>
-<ul>
-    <li>Listed by: {{ listing.owner }}</li>
-    <li>Created: {{ listing.date }}</li>
-    {% if listing.category %}
-    <li>Category: 
-        <a href="{% url 'auctions:category' listing.category.id %}">{{ listing.category }}</a>
-    </li>
-    {% else %}
-    <li>Category: No category!</li>
-    {% endif %}
-    <li>Description:</li>
-    <p>{{ listing.description }}</p>
-</ul>
+<!-- Comments -->
+{% if user.is_authenticated %}
+    <div>
+        <!-- TO be a form -->
+        <a href="#">Add comment</a>
+    </div>
 {% endif %}
 
 {% endblock %}

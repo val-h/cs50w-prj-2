@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.deletion import SET_DEFAULT, SET_NULL
 from django.db.models.fields import IntegerField
 # from decimal import Decimal
 # from django.db.models.fields.related import ForeignKey
@@ -37,7 +38,7 @@ class Listing(models.Model):
     start_price = models.DecimalField(max_digits=12, decimal_places=2)
     current_price = models.DecimalField(max_digits=12, decimal_places=2)
     active = models.BooleanField(default=True)
-    winner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="auctions_won")
+    winner = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name="auctions_won")
 
     # Optional
     image = models.ImageField(upload_to="images/", blank=True)
@@ -46,6 +47,7 @@ class Listing(models.Model):
     def __str__(self) -> str:
         return f"{self.title}, created by: {self.owner}"
 
+# I initially wanted  to make the choice for the user to create many watchlists, well no...
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
     # related name is for watchlist to display items with current watchlist number
