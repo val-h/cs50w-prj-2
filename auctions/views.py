@@ -19,21 +19,13 @@ def _get_watchlist(user):
         watchlist = user.watchlist.get(user=user)
     return watchlist
 
+
 def index(request):
-    listings = Listing.objects.all()
+    # Show only active listings
+    listings = Listing.objects.filter(active=True)
     return render(request, 'auctions/index.html', {
         'listings': listings,
     })
-    # try:
-    #     listings = Listing.objects.all()
-    # except OperationalError:
-    #     return render(request, 'auctions/index.html', {
-    #         'message': 'No listings available!',
-    #     })
-    # finally: 
-    #     return render(request, "auctions/index.html", {
-    #         'listings': listings,
-    #     })
 
 def login_view(request):
     if request.method == "POST":
@@ -131,7 +123,6 @@ def listing_view(request, listing_id):
 def close_auction(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     listing.active = False
-    # listing.winner = None # highest bidder 
     listing.save()
     return redirect('auctions:listing', listing_id)
 
@@ -164,38 +155,6 @@ def add_category(request):
         if form.is_valid():
             new_category = form.save()
             return redirect('auctions:category', new_category.id)
-
-# Didnt work as expected -> keeping it just for proof of work
-#  Finally worked ;d
-def _check_user_bid_on_listing(listing, user, amount):
-    # Make a querry set and take the first(and only) result
-    current_bid = listing.bids.filter(bidder=user)[0]
-    if current_bid and current_bid.amount < amount:
-        return True
-    elif current_bid.amount >= amount:
-        return False
-    # If the user doesn't have a bid at all
-    return True
-    #     if bid.bidder == user:
-    #         if bid.amount > amount:
-    #             return True
-    #         elif bid.amount <= amount:
-    #             return False
-    # return True
-
-    # if user.bids:
-    #     # u_bid = [u_bid for u_bid in user.bids if u_bid.listing.id == listing.id]
-    #     u_bid = user.bids
-    #     print(u_bid)
-    #     if u_bid and u_bid > amount:
-    #         return True
-    #     elif u_bid <= amount:
-    #         return False
-    #     return True
-    # return True
-
-# For the record, I spent another 5 hours just to figure out the validation
-# for this form -> max 1 bid per user and comparing the bids.
 
 @login_required
 def bid(request, listing_id):
@@ -232,27 +191,14 @@ def bid(request, listing_id):
                 'total_bids': total_bids,    
                 'bid_form': form,
             })
-        
-        # if _check_user_bid_on_listing(listing, bidder, int(request.POST['amount'])):
-        # else:
-        #     pass
-        #     # send error for form amount
 
 @login_required
 def watchlist_view(request):
-    # By far not the most effective method(don't know if it even works)
-    # I will make watchlists from the admin app until i implement a proper 
-    # watchlist for the user on init -> creation
     watchlist = _get_watchlist(request.user)
     return render(request, 'auctions/watchlist.html', {
         'listings': watchlist.listings.all(),
     })
-    
-# Finish the watchlist feature
-# figure out the manytomany realtions
 
-# FINALLY WORKED!!!
-# Still really bad implementation but it worked!
 @login_required
 def add_to_watchlist(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
