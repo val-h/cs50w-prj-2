@@ -10,4 +10,12 @@
             No listings available.
         </div>
     {% endfor %}
+    <div>
+        <h3>You can add your own category here:</h3>
+        <form action="{% url 'auctions:add_category' %}" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Add category">
+        </form>
+    </div>
 {% endblock %}

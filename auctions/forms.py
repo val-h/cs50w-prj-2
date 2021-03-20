@@ -106,7 +106,10 @@ class BidForm(forms.ModelForm):
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = []
+        fields = [
+            'title',
+            'description',
+        ]
         pass
 
 class CommentForm(forms.ModelForm):

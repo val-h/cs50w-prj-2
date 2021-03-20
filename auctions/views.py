@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from .models import Category, Listing, User, Watchlist
-from .forms import BidForm, ListingForm, CommentForm
+from .forms import BidForm, ListingForm, CommentForm, CategoryForm
 
 # Helper functions
 # Create a watchlist for the user, helper function
@@ -144,15 +144,26 @@ def reopen_auction(request, listing_id):
 
 def categories_view(request):
     categories = Category.objects.all()
+    category_form = CategoryForm()
     return render(request, 'auctions/categories.html', {
         'categories': categories,
+        'form': category_form,
     })
 
 def category_view(request, category_id):
     category = Category.objects.get(id=category_id)
     return render(request, 'auctions/category.html', {
+        'category': category,
         'listings': category.listings.all(),
     })
+
+@login_required
+def add_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            new_category = form.save()
+            return redirect('auctions:category', new_category.id)
 
 # Didnt work as expected -> keeping it just for proof of work
 #  Finally worked ;d

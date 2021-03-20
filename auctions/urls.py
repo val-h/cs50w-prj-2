@@ -11,6 +11,8 @@ urlpatterns = [
     path("register/", views.register, name="register"),
 
     # my paths
+
+    # general
     path("create_listing/", views.create_listing, name="create_listing"),
     path("listing/<int:listing_id>", views.listing_view, name="listing"),
     path("watchlist/", views.watchlist_view, name='watchlist'),
@@ -20,6 +22,7 @@ urlpatterns = [
     # forms
     path("listing/<int:listing_id>/bid", views.bid, name="bid"),
     path("listing/<int:listing_id>/comment", views.comment, name="comment"),
+    path("categories/add_category", views.add_category, name="add_category"),
 
     # misc (i don't know of a better name) / REST API
     # I'm trying the REST API impementation (without knowing what it is, never looked into it)
