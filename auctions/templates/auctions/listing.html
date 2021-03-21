@@ -42,7 +42,9 @@
 </div>
 
 {% if listing.active == True %}
+    {% if listing.owner == user %}
     <a href="{% url 'auctions:close_auction' listing.id %}">Close Auction</a>
+    {% endif %}
 
     <!-- Add to watchlist -->
     <div id="listing-watchlist">    

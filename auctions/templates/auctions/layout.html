@@ -5,47 +5,38 @@
     <head>
         <title>{% block title %}Auctions{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+        <link href="{% static 'auctions/style.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h1>Auctions</h1>
-        <div>
+        <header>
+            <img id="logo" src="media/images/auction_logo.png" alt="Auction Logo">
+            <h1 id="title">C O M M E R C E</h1>
+        </header>
+        <nav>
             {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
-            {% else %}
-                Not signed in.
+                <div id="nav-user">
+                    Signed in as <strong>{{ user.username }}</strong>.
+                </div>
             {% endif %}
-        </div>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'auctions:index' %}">Active Listings</a>
-            </li>
+
+            <a href="{% url 'auctions:index' %}">Active Listings</a>
             {% if user.is_authenticated %}
-            <li>
-                <a class="nav-link" href="{% url 'auctions:create_listing' %}">Create listing</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'auctions:watchlist' %}">Watchlist</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'auctions:categories' %}">Categories</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'auctions:logout' %}">Log Out</a>
-            </li>
+            <a href="{% url 'auctions:create_listing' %}">Create listing</a>
+            <a href="{% url 'auctions:watchlist' %}">Watchlist</a>
+            <a href="{% url 'auctions:categories' %}">Categories</a>
+            <a href="{% url 'auctions:logout' %}">Log Out</a>
             {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'auctions:login' %}">Log In</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'auctions:register' %}">Register</a>
-                </li>
+            <a href="{% url 'auctions:login' %}">Log In</a>
+            <a href="{% url 'auctions:register' %}">Register</a>
             {% endif %}
-        </ul>
-        <hr>
-        {% block body %}
-        {% endblock %}
-        <footer style="text-align: center; background-color: antiquewhite;">
+        </nav>
+
+        <main>
+            {% block body %}
+            {% endblock %}
+        </main>
+
+        <footer>
             <div>Created by: <a href="https://github.com/val-h" target="_blank">val-h</a></div>
         </footer>
     </body>
