@@ -104,7 +104,9 @@ def listing_view(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     bids = listing.bids.all()
     total_bids = len(bids)
-    user_watchlist = _get_watchlist(request.user).listings.all()
+    user_watchlist = None
+    if request.user.is_authenticated:
+        user_watchlist = _get_watchlist(request.user).listings.all()
     comments = listing.comments.all()
     return render(request, 'auctions/listing.html', {
         # Doesnt't save/load the image file corectly

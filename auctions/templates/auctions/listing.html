@@ -47,11 +47,13 @@
     {% endif %}
 
     <!-- Add to watchlist -->
-    <div id="listing-watchlist">    
-        {% if listing not in user_watchlist %}
-            <a href="{% url 'auctions:add_to_watchlist' listing.id %}">Add to watchlist</a>
-        {% else %}
-            <a href="{% url 'auctions:remove_from_watchlist' listing.id %}">Remove from watchlist</a>
+    <div id="listing-watchlist">
+        {% if user.is_authenticated %}    
+            {% if listing not in user_watchlist %}
+                <a href="{% url 'auctions:add_to_watchlist' listing.id %}">Add to watchlist</a>
+            {% else %}
+                <a href="{% url 'auctions:remove_from_watchlist' listing.id %}">Remove from watchlist</a>
+            {% endif %}
         {% endif %}
     </div>
 
