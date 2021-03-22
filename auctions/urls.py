@@ -32,4 +32,7 @@ urlpatterns = [
     path("listing/<int:listing_id>/remove_from_watchlist", views.remove_from_watchlist, name="remove_from_watchlist"),
     path("listing/<int:listing_id>/close_auction", views.close_auction, name="close_auction"),
     path("listing/<int:listing_id>/reopen_auction", views.reopen_auction, name="reopen_auction"),
+
+    # test
+    path("test/", views.test_index, name="test"),
 ]

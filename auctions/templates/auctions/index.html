@@ -22,7 +22,7 @@
             </a><br>
             <b>Price: {{ listing.current_price }}</b><br>
             <p>
-                {{ listing.description }}
+                {{ listing.description|truncatechars:200 }}
             </p>
         </div>
     {% empty %}

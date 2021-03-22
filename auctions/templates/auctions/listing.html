@@ -1,5 +1,7 @@
 {% extends 'auctions/layout.html' %}
 
+{% block title %}{{ listing.title }}{% endblock %}
+
 {% block body %}
 {% if listing.active == False %}
     <h3>Auction closed.</h3>

@@ -1,5 +1,7 @@
 {% extends 'auctions/layout.html' %}
 
+{% block title %}Create Auction{% endblock %}
+
 {% block body %}
 <h3>{{ form.non_field_errors }}</h3>
 <form action="{% url 'auctions:create_listing' %}" method="POST" enctype="multipart/form-data">

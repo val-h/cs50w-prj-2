@@ -27,6 +27,13 @@ def index(request):
         'listings': listings,
     })
 
+def test_index(request):
+    # Show only active listings
+    listings = Listing.objects.filter(active=True)
+    return render(request, 'auctions/test_index.html', {
+        'listings': listings,
+    })
+
 def login_view(request):
     if request.method == "POST":
 

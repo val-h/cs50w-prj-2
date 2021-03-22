@@ -1,5 +1,7 @@
 {% extends 'auctions/layout.html' %}
 
+{% block title %}Category - {{ category.title }}{% endblock %}
+
 {% block body %}
     <h2>Category: {{ category.title }}</h2>
     <p>{{ category.description }}</p>
