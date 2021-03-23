@@ -1,16 +1,45 @@
 {% extends 'auctions/layout.html' %}
+{% load static %}
 
 {% block title %}Watchlist{% endblock %}
 
 {% block body %}
-    {% for listing in listings %}
-        <div>
-            <a href="{% url 'auctions:listing' listing.id %}">{{ listing.title }}</a> - 
-            <a href="{% url 'auctions:remove_from_watchlist' listing.id %}">Remove</a>
-        </div>
-    {% empty %}
-        <div>
-            No listings available.
-        </div>
-    {% endfor %}
+    <div id="watchlist-wrapper">
+        {% for listing in listings %}
+        
+            <div class="listing-thumbnail">
+                <a class="listing-thumbnail-remove" href="{% url 'auctions:remove_from_watchlist' listing.id %}">Remove</a>
+                <div  class="listing-thumbnail-image">  
+                    <a href="{% url 'auctions:listing' listing.id %}">
+                    {% if listing.image %}
+                        <img src="{{ listing.image.url }}" alt="{{ listing.image.url }}">
+                    {% else %}
+                        <img src="{% static 'admin/img/image_not_available.png' %}" alt="Image not available.">
+                    {% endif %}
+                    </a>
+                </div>
+
+                <div class="listing-thumbnail-name">
+                    <a href="{% url 'auctions:listing' listing.id %}">
+                        {{ listing.title }}
+                    </a>
+                </div>
+
+                <div class="listing-thumbnail-date">
+                    {{ listing.date }}
+                </div>
+
+                <b class="listing-thumbnail-price">Price: {{ listing.current_price }}</b><br>
+
+                <div class="listing-thumbnail-owner">
+                    {{ listing.owner }}
+                </div>
+                <!-- <a class="listing-thumbnail-name" href="{% url 'auctions:listing' listing.id %}">{{ listing.title }}</a> -->
+            </div>
+        {% empty %}
+            <div>
+                No listings available.
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

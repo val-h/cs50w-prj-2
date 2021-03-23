@@ -14,6 +14,85 @@ $brd-rad: 7px;
     border-right: 3px solid $first-color;
 }
 
+%form-item {
+    border: 2px solid $first-color;
+    border-radius: $brd-rad;
+    padding: 3px 8px;
+}
+
+%listing-thumbnail-grid {
+    margin: 15px 20px;
+    // text-align: center;
+    border: 3px solid $first-color;
+    border-radius: $brd-rad;
+    box-shadow: 0 0 7px 4px lightgray;
+    width: 600px;
+    height: 450px;
+    min-width: 600px;
+    background-color: white;
+
+    display: grid;
+    grid-template-columns: 30% 40% 30%;
+    grid-template-rows: 70% 15% 15%;
+
+    .listing-thumbnail-image {
+        grid-area: 1 / 1 / 2 / 4;
+            
+        img {
+            border-radius: $brd-rad;
+            max-height: 300px;
+            margin: 7px 0;
+        }
+    }
+    
+    .listing-thumbnail-name {
+         a {
+            color: $third-color;
+             text-decoration: none;
+
+        }
+        font-size: 24px;
+        background-color: $first-color;
+        border-radius: $brd-rad;
+        margin: 5px 10px;
+        padding-top: 7px;
+        grid-area: 2 / 1 / 3 / 4;
+    }
+    
+    .listing-thumbnail-price {
+        padding-top: 12px;
+        margin: 7px 0;
+        color: white;
+        font-size: 22px;
+        background-color: $first-color;
+        vertical-align: middle;
+        border-radius: $brd-rad;
+        grid-area: 3/ 2 / 4 /3;
+    }
+
+    .listing-thumbnail-date, .listing-thumbnail-owner {
+        margin: 12px -7px 12px 10px;
+        border: 4px solid $first-color;
+        color: $first-color;
+        border-radius: $brd-rad;
+        padding-top: 10px;
+        font-size: 12px;
+        grid-area: 3 / 1 / 4 / 2;
+    }
+    
+    .listing-thumbnail-owner {
+        margin: 12px 10px 12px -7px;
+        grid-area: 3 / 3 / 4 / 4;
+    }
+
+    .listing-thumbnail-remove {
+        background-color: mediumvioletred;
+        padding: 4px 12px;
+        border-radius: $brd-rad;
+        grid-area: 4 / 2 / 5 / 3;
+    }
+}
+
 
 body {
     padding: 10px;
@@ -100,110 +179,67 @@ main {
         // align-items: center;
         justify-content: center;
 
-        // a lot of work will go into this
-        .listing-thumbnail {
-            margin: 15px 20px;
-            text-align: center;
-            border: 1px solid black;
-            border-radius: $brd-rad;
-            box-shadow: 0 0 7px 4px lightgray;
-            width: 600px;
-            height: 450px;
-            min-width: 600px;
-            background-color: whitesmoke;
-            
-            .thumbnail-name{
-                font-size: 22px;
-            }
-            
-            img {
-                // width: auto;
-                height: 300px;
-                // max-height: 340px;
-                // object-fit: cover;
-            }
-
-            p {
-                font-size: 13px;
-            }
-        }
-
-        .listing-thumbnail:hover {
-            border: 1px solid black;
-            border-radius: 12px;
-            box-shadow: 0 0 12px 7px lightgray;
-        }
-
         .listing-thumbnail-grid {
-            margin: 15px 20px;
-            // text-align: center;
-            border: 3px solid $first-color;
-            border-radius: $brd-rad;
-            box-shadow: 0 0 7px 4px lightgray;
-            width: 600px;
-            height: 450px;
-            min-width: 600px;
-            background-color: white;
-
-            display: grid;
-            grid-template-columns: 30% 40% 30%;
-            grid-template-rows: 70% 15% 15%;
-
-            .listing-thumbnail-image {
-                grid-area: 1 / 1 / 2 / 4;
-                    
-                img {
-                    border-radius: $brd-rad;
-                    max-height: 300px;
-                    margin: 7px 0;
-                }
-            }
-            
-            .listing-thumbnail-name {
-                 a {
-                    color: $third-color;
-                     text-decoration: none;
-
-                }
-                font-size: 24px;
-                background-color: $first-color;
-                border-radius: $brd-rad;
-                margin: 5px 10px;
-                padding-top: 7px;
-                grid-area: 2 / 1 / 3 / 4;
-            }
-            
-            .listing-thumbnail-price {
-                padding-top: 12px;
-                margin: 7px 0;
-                color: white;
-                font-size: 22px;
-                background-color: $first-color;
-                vertical-align: middle;
-                border-radius: $brd-rad;
-                grid-area: 3/ 2 / 4 /3;
-            }
-
-            .listing-thumbnail-date, .listing-thumbnail-owner {
-                margin: 12px -7px 12px 10px;
-                border: 4px solid $first-color;
-                color: $first-color;
-                border-radius: $brd-rad;
-                padding-top: 10px;
-                font-size: 12px;
-                grid-area: 3 / 1 / 4 / 2;
-            }
-            
-            .listing-thumbnail-owner {
-                margin: 12px 10px 12px -7px;
-                grid-area: 3 / 3 / 4 / 4;
-            }
+            @extend %listing-thumbnail-grid;
         }
     }
 
-    // listing page
-    .listing-grid {
+    // Watchlist
+    #watchlist-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+
+        .listing-thumbnail{
+            @extend %listing-thumbnail-grid;
+        }
+    }
+
+    // Listing page
+    #listing-grid {
     
+    }
+
+    // Create listing
+    #create-listing-grid {
+        display: grid;
+        margin: 25px 20px;
+        padding: 20px;
+        grid-template-columns: 40% 40%;
+        grid-template-rows: 40px 40px 40px 30px;
+        grid-column-gap: 40px;
+        grid-row-gap: 25px;
+        justify-content: center;
+        text-align: center;
+
+        font-size: 14px;
+        color: $first-color;
+
+
+        #id_title {
+            @extend %form-item;
+            grid-area: 1 / 1 / 2 / 2;
+        }
+        #id_category {
+            @extend %form-item;
+            grid-area: 2 / 1 / 3 / 2;
+        }
+        #id_start_price {
+            @extend %form-item;
+            grid-area: 3 / 1 / 4 / 2;
+        }
+        #id_description {
+            @extend %form-item;
+            grid-area: 1 / 2 / 3 / 3;
+        }
+        #id_image {
+            grid-area: 3 / 2 / 4 / 3;
+        }
+        #form-submit-button {
+            width: 200px;
+            height: 42px;
+            margin-left: 0;
+        }
     }
 
     // Categories
@@ -240,16 +276,50 @@ main {
     #categories-form{
         // vertical-align: middle;
         #id_title, #id_description {
+            @extend %form-item;
+
             width: 15%;
             min-width: 150px;
             line-height: 30px;
-            border: 2px solid $first-color;
-            border-radius: $brd-rad;
-            padding: 3px 8px;
+            
         }
         #id_description {
             width: 65%;
             margin: 0 15px;
+        }
+    }
+
+
+    // Category
+    #category-wrapper {
+        #category-title, #category-description {
+            display: inline;
+            color: $first-color;
+            font-size: 28px;
+            background-color: $second-color;
+            border-radius: $brd-rad;
+            border: 3px solid $first-color;
+            border-top: none;
+            border-right: none;
+            padding: 6px 14px;
+            margin: 8px 22px;
+            width: 300px;
+        }
+
+        #category-flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 25px 20px;
+
+            .category-item {
+                background-color: $first-color;
+                color: $third-color;
+                font-size: 20px;
+                padding: 4px 8px;
+                margin: 6px 12px;
+                border-radius: $brd-rad;
+                text-decoration: none;
+            }
         }
     }
 }

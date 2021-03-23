@@ -74,7 +74,15 @@ class ListingForm(forms.ModelForm):
         'description',
         'image',]
         labels = {
-            
+            'title': '',
+            'category': '',
+            'start_price': '',
+            'description': '',
+            'image': '',
+        }
+        widgets = {
+            'title': forms.TextInput(attrs = {'placeholder': 'Title'}),
+            'description': forms.Textarea(attrs = {'placeholder': 'Description'}),
         }
 
 # TODO

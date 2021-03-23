@@ -3,15 +3,15 @@
 {% block title %}Category - {{ category.title }}{% endblock %}
 
 {% block body %}
-    <h2>Category: {{ category.title }}</h2>
-    <p>{{ category.description }}</p>
-    {% for listing in listings %}
-        <div>
-            <a href="{% url 'auctions:listing' listing.id %}">{{ listing.title }}</a>
+    <div id="category-wrapper">
+        <h2 id="category-title">{{ category.title }}</h2>
+        <p id="category-description">{{ category.description }}</p>
+        <div id="category-flex-container">
+            {% for listing in listings %}
+                <a class="category-item" href="{% url 'auctions:listing' listing.id %}">{{ listing.title }}</a>
+            {% empty %}
+                No listings available for this category.
+            {% endfor %}
         </div>
-    {% empty %}
-        <div>
-            No listings available for this category.
-        </div>
-    {% endfor %}
+    </div>
 {% endblock %}
