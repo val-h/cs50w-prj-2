@@ -73,6 +73,9 @@ class ListingForm(forms.ModelForm):
         'start_price',
         'description',
         'image',]
+        labels = {
+            
+        }
 
 # TODO
 class BidForm(forms.ModelForm):
@@ -101,6 +104,9 @@ class BidForm(forms.ModelForm):
         fields = [
             'amount',
         ]
+        labels = {
+            
+        }
 
 # i wanted to make so users can add cattegories and i will finish this!
 class CategoryForm(forms.ModelForm):
@@ -110,7 +116,15 @@ class CategoryForm(forms.ModelForm):
             'title',
             'description',
         ]
-        pass
+        labels = {
+            'title': '',
+            'description': '',
+        }
+        widgets = {
+            'title': forms.TextInput(attrs = {'placeholder': 'Title'}),
+            'description': forms.TextInput(attrs = {'placeholder': 'Description'}),
+        }
+
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -118,4 +132,6 @@ class CommentForm(forms.ModelForm):
         fields = [
             'content',
         ]
-        pass
+        labels = {
+            
+        }

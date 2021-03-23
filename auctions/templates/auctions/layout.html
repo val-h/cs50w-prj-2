@@ -9,8 +9,10 @@
     </head>
     <body>
         <header>
-            <img id="logo" src="{% static 'admin/img/auction_logo.png' %}" alt="Auction Logo">
-            <h1 id="title">A U C T I O N</h1>
+            <a href="{% url 'auctions:index' %}">
+                <img id="logo" src="{% static 'admin/img/auction_logo.png' %}" alt="Auction Logo">
+                <h1 id="title">A U C T I O N</h1>
+            </a>
         </header>
         <nav>
             {% if user.is_authenticated %}

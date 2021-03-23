@@ -1,21 +1,23 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
-    {% for category in categories %}
-        <div>
-            <a href="{% url 'auctions:category' category.id %}">{{ category.title }}</a>
-        </div>
-    {% empty %}
-        <div>
-            No listings available.
-        </div>
-    {% endfor %}
-    <div>
-        <h3>You can add your own category here:</h3>
-        <form action="{% url 'auctions:add_category' %}" method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Add category">
-        </form>
+    <div id="categories-container">
+        {% for category in categories %}
+            <div class="category-item">
+                <a href="{% url 'auctions:category' category.id %}">{{ category.title }}</a>
+            </div>
+        {% empty %}
+            <div>
+                No listings available.
+            </div>
+{% endfor %}
     </div>
+    <!-- <div id="categories-form"> -->
+        <h3 id="main-secondary-title">You can add your own category here:</h3>
+        <form id="categories-form" action="{% url 'auctions:add_category' %}" method="POST">
+            {% csrf_token %}
+            {{ form }}
+            <input id="form-submit-button" type="submit" value="Add category">
+        </form>
+    <!-- </div> -->
 {% endblock %}
