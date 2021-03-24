@@ -20,6 +20,15 @@ $brd-rad: 7px;
     padding: 3px 8px;
 }
 
+%listing-item {
+    width: 100%;
+    border: 3px solid $second-color;
+    border-radius: $brd-rad;
+    margin-bottom: 50px;
+    padding: 30px 20px;
+    text-align: left;
+}
+
 %listing-thumbnail-grid {
     margin: 15px 20px;
     // text-align: center;
@@ -171,7 +180,12 @@ main {
         margin: 18px 16px;
     }
 
-    // index page 
+    #form-submit-button:hover {
+        background-color: $second-color;
+        color: $first-color;
+    }
+
+    // Index page 
     #flex-container {
         display: flex;
         flex-wrap: wrap;
@@ -195,7 +209,87 @@ main {
 
     // Listing page
     #listing-grid {
+        display: grid;
+        grid-template-columns: 70% 350px;
+        grid-template-rows: auto auto auto;
+        grid-column-gap: 5%;
+        grid-row-gap: 80px;
+        padding: 20px;
+        margin: 25px 5%;
+
+        #listing-main {
+            // @extend %listing-item;
+            // height: 600px;
+            grid-area: 1 / 1 / 3 / 2;
+
+            #listing-main-content {
+                @extend %listing-item;
+                text-align: center;
+                
+                #listing-main-title {
+                    font-size: 38px;
+                    color: $first-color;
+                }
+                #listing-main-image {
+                    max-height: 550px;
+                    border-radius: $brd-rad;
+                    border: 3px solid $first-color;
+                }
+            }
+            
+            #listing-comment-section {
+                @extend %listing-item;
+                display: flex;
+                flex-wrap: nowrap;
+                justify-content: space-evenly;
+
+                #listing-comment-form {
+                    width: 35%;
+
+                    #id_content {
+                        @extend %form-item;
+                        width: 100%;
+                        height: 120px;
+                        margin-bottom: 0;
+                    }
+
+                    #form-submit-button {
+                        margin: 0;
+                    }
+                }
+                
+                #listing-comments {
+                    width: 60%;
+                    margin: 0 35px;
+                    .comment {
+                        @extend %listing-item;
+                    }
+                }
+            }
+        }
+            
+        #listing-side {
+            // @extend %listing-item;
+            grid-area: 1 / 2 / 2 / 3;
+
+            #listing-details {
+                @extend %listing-item;
+                grid-area: 1 / 2 / 2 / 3;    
+            }
     
+            #listing-bids {
+                @extend %listing-item;
+                grid-area: 2 / 2 / 3 / 3;
+
+                #id_amount {
+                    @extend %form-item;
+                }
+
+                #form-submit-button {
+                    margin: 10px 0;
+                }
+            }
+        }
     }
 
     // Create listing
@@ -212,7 +306,6 @@ main {
 
         font-size: 14px;
         color: $first-color;
-
 
         #id_title {
             @extend %form-item;
@@ -287,7 +380,6 @@ main {
         }
     }
 
-
     // Category
     #category-wrapper {
         #category-title, #category-description {
@@ -324,6 +416,5 @@ main {
 
 footer {
     @extend %layout-item;
-
     vertical-align: middle;
 }

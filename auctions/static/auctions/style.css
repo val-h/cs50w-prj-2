@@ -7,10 +7,19 @@ footer, main, nav, header {
   border-right: 3px solid lightskyblue;
 }
 
-main #categories-form #id_title, main #categories-form #id_description, main #create-listing-grid #id_description, main #create-listing-grid #id_start_price, main #create-listing-grid #id_category, main #create-listing-grid #id_title {
+main #categories-form #id_title, main #categories-form #id_description, main #create-listing-grid #id_description, main #create-listing-grid #id_start_price, main #create-listing-grid #id_category, main #create-listing-grid #id_title, main #listing-grid #listing-side #listing-bids #id_amount, main #listing-grid #listing-main #listing-comment-section #listing-comment-form #id_content {
   border: 2px solid lightskyblue;
   border-radius: 7px;
   padding: 3px 8px;
+}
+
+main #listing-grid #listing-side #listing-bids, main #listing-grid #listing-side #listing-details, main #listing-grid #listing-main #listing-comment-section #listing-comments .comment, main #listing-grid #listing-main #listing-comment-section, main #listing-grid #listing-main #listing-main-content {
+  width: 100%;
+  border: 3px solid #ffeac3;
+  border-radius: 7px;
+  margin-bottom: 50px;
+  padding: 30px 20px;
+  text-align: left;
 }
 
 main #watchlist-wrapper .listing-thumbnail, main #flex-container .listing-thumbnail-grid {
@@ -135,6 +144,10 @@ main #form-submit-button {
   padding: 5px 12px;
   margin: 18px 16px;
 }
+main #form-submit-button:hover {
+  background-color: #ffeac3;
+  color: lightskyblue;
+}
 main #flex-container {
   display: flex;
   flex-wrap: wrap;
@@ -144,6 +157,62 @@ main #watchlist-wrapper {
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 30px;
+}
+main #listing-grid {
+  display: grid;
+  grid-template-columns: 70% 350px;
+  grid-template-rows: auto auto auto;
+  grid-column-gap: 5%;
+  grid-row-gap: 80px;
+  padding: 20px;
+  margin: 25px 5%;
+}
+main #listing-grid #listing-main {
+  grid-area: 1/1/3/2;
+}
+main #listing-grid #listing-main #listing-main-content {
+  text-align: center;
+}
+main #listing-grid #listing-main #listing-main-content #listing-main-title {
+  font-size: 38px;
+  color: lightskyblue;
+}
+main #listing-grid #listing-main #listing-main-content #listing-main-image {
+  max-height: 550px;
+  border-radius: 7px;
+  border: 3px solid lightskyblue;
+}
+main #listing-grid #listing-main #listing-comment-section {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+}
+main #listing-grid #listing-main #listing-comment-section #listing-comment-form {
+  width: 35%;
+}
+main #listing-grid #listing-main #listing-comment-section #listing-comment-form #id_content {
+  width: 100%;
+  height: 120px;
+  margin-bottom: 0;
+}
+main #listing-grid #listing-main #listing-comment-section #listing-comment-form #form-submit-button {
+  margin: 0;
+}
+main #listing-grid #listing-main #listing-comment-section #listing-comments {
+  width: 60%;
+  margin: 0 35px;
+}
+main #listing-grid #listing-side {
+  grid-area: 1/2/2/3;
+}
+main #listing-grid #listing-side #listing-details {
+  grid-area: 1/2/2/3;
+}
+main #listing-grid #listing-side #listing-bids {
+  grid-area: 2/2/3/3;
+}
+main #listing-grid #listing-side #listing-bids #form-submit-button {
+  margin: 10px 0;
 }
 main #create-listing-grid {
   display: grid;
