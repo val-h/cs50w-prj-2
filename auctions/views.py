@@ -162,12 +162,10 @@ def add_category(request):
 def bid(request, listing_id):
     if request.method == "POST":
         listing = Listing.objects.get(id=listing_id)
-        print(listing.bids.all())
         bidder = request.user
         # Take the first (and only) result for the user's bid
         try:
             current_bid = listing.bids.filter(bidder=bidder)[0]
-            print(current_bid)
         except:
             current_bid = None
 
@@ -182,7 +180,6 @@ def bid(request, listing_id):
             listing.current_price = new_bid.amount # change the highest bid
             listing.winner = bidder # Make the new winner the highest bidder
             listing.save()
-            print(current_bid)
             return redirect('auctions:listing', listing_id)
         else:
             bids = listing.bids.all()

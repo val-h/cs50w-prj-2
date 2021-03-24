@@ -11,98 +11,112 @@
     {% endif %}
 {% endif %}
 
-<!-- Main content -->
-<div id="listing-main">
-    <h1>{{ listing.title }}</h1>
-    {% if listing.image %}
-    <div id="img-listing">
-        <!-- Problem with the image file for listings -->
-        <img src="{{ listing.image.url }}" style="max-width: 600px;" alt="Listing Image">
-        <div id="img-caption">
-            Image caption
-        </div>
-    </div>
-    {% endif %}
-</div>
+<div id="listing-grid">
 
-<!-- Details -->
-<div id="listing-details">
-    <h3>Details:</h3>
-    <ul>
-        <li>Listed by: {{ listing.owner }}</li>
-        <li>Created: {{ listing.date }}</li>
-        {% if listing.category %}
-        <li>Category: 
-            <a href="{% url 'auctions:category' listing.category.id %}">{{ listing.category }}</a>
-        </li>
-        {% else %}
-        <li>Category: No category!</li>
-        {% endif %}
-        <li>Description:</li>
-        <p>{{ listing.description }}</p>
-    </ul>
-</div>
-
-{% if listing.active == True %}
-    {% if listing.owner == user %}
-    <a href="{% url 'auctions:close_auction' listing.id %}">Close Auction</a>
-    {% endif %}
-
-    <!-- Add to watchlist -->
-    <div id="listing-watchlist">
-        {% if user.is_authenticated %}    
-            {% if listing not in user_watchlist %}
-                <a href="{% url 'auctions:add_to_watchlist' listing.id %}">Add to watchlist</a>
-            {% else %}
-                <a href="{% url 'auctions:remove_from_watchlist' listing.id %}">Remove from watchlist</a>
+    <!-- Main -->
+    <div id="listing-main">
+        <!-- Main content -->
+        <div id="listing-main-content">
+            <h1 id="listing-main-title">{{ listing.title }}</h1>
+            {% if listing.image %}
+                <img id="listing-main-image" src="{{ listing.image.url }}" style="max-width: 600px;" alt="Listing Image">
             {% endif %}
-        {% endif %}
-    </div>
-
-    <!-- Bids -->
-    <div id="listing-bids">
-        <h2>Current bid: {{ listing.current_price }}</h2>
-        <h4>Initial price: {{ listing.start_price }}</h4>
-        <h2>Bids: </h2>
-        <span>{{ total_bids }} bid(s) so far.</span>
-        {% for bid in bids %}
-            <li>By: {{ bid.bidder }}, price: {{ bid.amount }}</li>
-        <!-- {% empty %}
-            <li>No available bids.</li> -->
-        {% endfor %}
-    </div>
-
-    <!-- Bid -->        
-    {% if user.is_authenticated and user != listing.owner %}
-        <div>
-            <h3>{{ bid_form.non_field_errors }}</h3>
-            <form action="{% url 'auctions:bid' listing.id %}" method="POST">
-                {% csrf_token %}
-                {{ bid_form }}
-                <input type="submit" value="Place bid">
-            </form>
         </div>
-    {% endif %}
+        <!-- End Main content -->
 
-    {% if user.is_authenticated %}
-    <form action="{% url 'auctions:comment' listing.id %}" method="POST">
-        {% csrf_token %}
-        {{ comment_form.as_p }}
-        <input type="submit" value="Add comment">
-    </form>
-    {% endif %}
-    {% else %}
-    <a href="{% url 'auctions:reopen_auction' listing.id %}">Reopen Auction</a>
-{% endif %}
-
-    <!-- Comments -->
-    <div id="listing-comment-section">
-        {% for comment in comments %}
-            <div class="comment">
-                <div>{{ comment.owner }} - {{ comment.date }}</div>
-                <div>{{ comment.content }}</div>
+        <!-- Comments -->
+        <div id="listing-comment-section">
+            <div id="listing-comments">
+                {% for comment in comments %}
+                <div class="comment">
+                    <div>{{ comment.owner }} - {{ comment.date }}</div>
+                    <br>
+                    <div>{{ comment.content }}</div>
+                </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+
+            {% if user.is_authenticated %}
+                <form id="listing-comment-form" action="{% url 'auctions:comment' listing.id %}" method="POST">
+                    {% csrf_token %}
+                    {{ comment_form.as_p }}
+                    <input id="form-submit-button" type="submit" value="Add comment">
+                </form>
+            {% endif %}
+        </div>
+        <!-- End Comments -->
     </div>
-    
+    <!-- End Main -->
+
+    <!-- Side -->
+    <div id="listing-side">
+        <!-- Details -->
+        <div id="listing-details">
+            <h3 id="main-secondary-title">Details:</h3>
+            <ul>
+                <li>Listed by: {{ listing.owner }}</li>
+                <li>Created: {{ listing.date }}</li>
+                {% if listing.category %}
+                <li>Category: 
+                    <a href="{% url 'auctions:category' listing.category.id %}">{{ listing.category }}</a>
+                </li>
+                {% else %}
+                <li>Category: No category!</li>
+                {% endif %}
+                <li>Description:</li>
+                <p>{{ listing.description }}</p>
+            </ul>
+        </div>
+        <!-- End Details -->
+
+        <!-- Bids -->
+        <div id="listing-bids">
+        {% if listing.active == True %}
+            {% if listing.owner == user %}
+            <a href="{% url 'auctions:close_auction' listing.id %}">Close Auction</a>
+            {% endif %}
+
+            <h2>Current bid: {{ listing.current_price }}</h2>
+            <h4>Initial price: {{ listing.start_price }}</h4>
+            
+            <h2>Bids: </h2>
+            <span>{{ total_bids }} bid(s) so far.</span>
+            {% for bid in bids %}
+                <li>By: {{ bid.bidder }}, price: {{ bid.amount }}</li>
+            {% endfor %}
+                    
+            <!-- Bid -->        
+            {% if user.is_authenticated and user != listing.owner %}
+            <div>
+                <h3>{{ bid_form.non_field_errors }}</h3>
+                <form action="{% url 'auctions:bid' listing.id %}" method="POST">
+                    {% csrf_token %}
+                    {{ bid_form }}
+                    <input id="form-submit-button" type="submit" value="Place bid">
+                </form>
+            </div>
+            {% endif %}
+            
+            <!-- Add to watchlist -->
+            <div id="listing-watchlist">
+                {% if user.is_authenticated %}    
+                    {% if listing not in user_watchlist %}
+                        <a href="{% url 'auctions:add_to_watchlist' listing.id %}">Add to watchlist</a>
+                    {% else %}
+                        <a href="{% url 'auctions:remove_from_watchlist' listing.id %}">Remove from watchlist</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            
+            {% else %}
+                <a href="{% url 'auctions:reopen_auction' listing.id %}">Reopen Auction</a>
+            {% endif %}
+        </div>
+        <!-- End Bids -->
+    </div>
+    <!-- End Side -->
+
+</div>
+<!-- End Grid -->
+
 {% endblock %}
