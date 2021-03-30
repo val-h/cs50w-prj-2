@@ -109,8 +109,9 @@
             </div>
             
             {% else %}
-                <a href="{% url 'auctions:reopen_auction' listing.id %}">Reopen Auction</a>
-            {% endif %}
+                {% if listing.owner == user %}
+                    <a href="{% url 'auctions:reopen_auction' listing.id %}">Reopen Auction</a>
+                {% endif %}            {% endif %}
         </div>
         <!-- End Bids -->
     </div>

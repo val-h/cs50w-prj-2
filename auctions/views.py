@@ -184,11 +184,14 @@ def bid(request, listing_id):
         else:
             bids = listing.bids.all()
             total_bids = len(bids)
+            comments = listing.comments.all()
             return render(request, 'auctions/listing.html', {
                 'listing': listing,
                 'bids': bids,
                 'total_bids': total_bids,    
                 'bid_form': form,
+                'comments': comments,
+                'comment_form': CommentForm(),
             })
 
 @login_required
